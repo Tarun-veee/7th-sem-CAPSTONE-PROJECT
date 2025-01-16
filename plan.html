@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="importantDaysApp">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Important Days</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-controller="DaysController">
+  <div class="container mt-5">
+    <h1>Trip Planner</h1>
+    <div class="form-group">
+      <label for="dayInput">Date:</label>
+      <input type="date" id="dayInput" class="form-control mb-2" ng-model="newDay.date">
+    </div>
+    <div class="form-group">
+      <label for="occasionInput">Place:</label>
+      <input type="text" id="occasionInput" class="form-control mb-2" ng-model="newDay.occasion" placeholder="Enter place...">
+    </div>
+    <button class="btn btn-primary" ng-click="addDay()">Add to planner</button>
+    <table class="table mt-3">
+      <thead>
+        <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Place</th>
+          <th scope="col">Status</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="day in days">
+          <td>{{ day.date }}</td>
+          <td>{{ day.occasion }}</td>
+          <td>
+            <span>{{ day.status }}</span>
+            <br>
+            <button class="btn btn-success btn-sm mr-2" ng-click="updateStatus(day, 'Completed')">Visited</button>
+            <button class="btn btn-warning btn-sm mr-2" ng-click="updateStatus(day, 'Not Completed')">Not Visited!</button>
+          </td>
+          <td>
+            <button class="btn btn-danger btn-sm" ng-click="deleteDay(day)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    angular.module('importantDaysApp', [])
+      .controller('DaysController', function($scope) {
+        $scope.days = [];
+        $scope.newDay = { date: '', occasion: '', status: 'Not Completed' };
+
+        $scope.addDay = function() {
+          if ($scope.newDay.date && $scope.newDay.occasion) {
+            $scope.days.push({ 
+              date: $scope.newDay.date, 
+              occasion: $scope.newDay.occasion, 
+              status: 'Not Completed' 
+            });
+            $scope.newDay = { date: '', occasion: '', status: 'Not Completed' };
+          }
+        };
+
+        $scope.updateStatus = function(day, status) {
+          day.status = status;
+        };
+
+        $scope.deleteDay = function(day) {
+          const index = $scope.days.indexOf(day);
+          if (index > -1) {
+            $scope.days.splice(index, 1);
+          }
+        };
+      });
+  </script>
+</body>
+</html>

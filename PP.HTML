@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iternery Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+            resize: none;
+        }
+
+        input, select, button {
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .iternery-output {
+            margin-top: 20px;
+            padding: 10px;
+            border-top: 2px solid #ddd;
+            font-size: 1.1rem;
+            color: #333;
+            min-height: 100px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Trip Advisor</h1>
+        
+        <textarea id="prompt" placeholder="Enter your travel destination here..."></textarea>
+
+       
+        <input type="number" id="wordCount" placeholder="Number of days" min="1">
+
+        
+        <select id="travel">
+            <option value="fiction">car</option>
+            <option value="mystery">Bus</option>
+            <option value="adventure">Train</option>
+            <option value="fantasy">Flight</option>
+        </select>
+
+        <!-- Generate Button -->
+        <button id="generateBtn">Generate iternery</button>
+
+        <!-- iternery Output -->
+        <div id="iterneryOutput" class="iternery-output"></div>
+    </div>
+
+    <script>
+        document.getElementById('generateBtn').addEventListener('click', generateit);
+
+        async function generateiternery() {
+            const prompt = document.getElementById('prompt').value;
+            const wordCount = document.getElementById('wordCount').value;
+            const genre = document.getElementById('genre').value;
+            const iterneryOutput = document.getElementById('iterneryOutput');
+
+            // Validate inputs
+            if (!prompt.trim()) {
+                iterneryOutput.innerText = "Please enter a valid prompt!";
+                return;
+            }
+
+            if (!wordCount || wordCount < 50) {
+                iterneryOutput.innerText = "Please enter a valid word count (minimum 50).";
+                return;
+            }
+
+            iterneryOutput.innerText = "Generating iternary... Please wait.";
+
+            try {
+                // Prepare prompt with genre and word count info
+                const fullPrompt = `Write a ${genre} iternery based on the following prompt:\n"${prompt}". Make the iternery around ${wordCount} words long.`;
+
+                const response = await fetch('https://api.openai.com/v1/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer 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`
+                    },
+                    body: JSON.stringify({
+                        model: 'text-davinci-003',
+                        prompt: fullPrompt,
+                        max_tokens: wordCount * 5, // Approximate token count based on word length
+                        temperature: 0.7
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.choices && data.choices[0].text) {
+                    iterneryOutput.innerText = data.choices[0].text.trim();
+                } else {
+                    iterneryOutput.innerText = "Sorry, something went wrong.";
+                }
+            } catch (error) {
+                console.error(error);
+                iterneryOutput.innerText = "Error generating iternery. Please try again later.";
+            }
+        }
+    </script>
+</body>
+</html>

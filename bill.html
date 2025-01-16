@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Splitter</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f9f9f9;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="text-center">Bill Splitter</h1>
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="form-group">
+                <label for="totalAmount">Total Bill Amount ($):</label>
+                <input type="number" id="totalAmount" class="form-control" placeholder="Enter total bill amount" required>
+            </div>
+            <div class="form-group">
+                <label for="numPeople">Number of People:</label>
+                <input type="number" id="numPeople" class="form-control" placeholder="Enter number of people" required>
+            </div>
+            <button class="btn btn-primary btn-block" onclick="splitBill()">Split Bill</button>
+
+            <div class="result" id="result"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function splitBill() {
+        // Get the values from the inputs
+        const totalAmount = parseFloat(document.getElementById('totalAmount').value);
+        const numPeople = parseInt(document.getElementById('numPeople').value);
+
+        // Check if inputs are valid
+        if (isNaN(totalAmount) || isNaN(numPeople) || totalAmount <= 0 || numPeople <= 0) {
+            document.getElementById('result').textContent = 'Please enter valid numbers for total amount and number of people.';
+            return;
+        }
+
+        // Calculate the amount each person should pay
+        const amountPerPerson = totalAmount / numPeople;
+
+        // Display the result
+        document.getElementById('result').textContent = `Each person should pay: $${amountPerPerson.toFixed(2)}`;
+    }
+</script>
+
+</body>
+</html>
